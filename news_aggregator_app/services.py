@@ -76,3 +76,11 @@ def checkTime(date):
     today = datetime.datetime.now()
     DD = datetime.datetime.strptime(date, '%Y-%m-%dT%H:%M:%S.%fZ')
     return abs((today - DD).days)
+
+def createFavouriteNews(user:str, id:int) -> List[Dict]:
+    try:
+        news = News.objects.get(id=id)
+        serializer = NewsSerializer(news, many=False)
+        return serializer.data
+    except:
+        return None
