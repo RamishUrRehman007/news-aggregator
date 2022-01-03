@@ -17,3 +17,11 @@ class News(models.Model):
 
     def __str__(self) -> str:
         return self.headline
+
+class Favourite(models.Model):
+    user = models.CharField(max_length=250, null=False, blank=False)
+    news = models.ForeignKey(News, on_delete=models.CASCADE)
+    favourite = models.BooleanField(default=False)
+    
+    def __str__(self) -> str:
+        return self.user

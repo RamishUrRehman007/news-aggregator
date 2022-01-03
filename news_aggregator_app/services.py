@@ -9,11 +9,13 @@ from .third_party_integrations import (reddit,
     )
 
 from .serializers import (NewsSerializer,
-    NewsQuerySerializer
+    NewsQuerySerializer,
+    FavouriteSerializer
     )
 
 from .models import (NewsQuery,
-    News
+    News,
+    Favourite
     )
 
 import datetime
@@ -76,3 +78,59 @@ def checkTime(date):
     today = datetime.datetime.now()
     DD = datetime.datetime.strptime(date, '%Y-%m-%dT%H:%M:%S.%fZ')
     return abs((today - DD).days)
+
+def createFavouriteNews(user:str, id:int) -> List[Dict]:
+    try:
+        is_favourite = getFavouriteNewsBySearch(user=user, id=id)
+        print(is_favourite)
+        if is_favourite is None:
+            data = {'user':user, 'news':id, 'favourite':True}
+            print(data)
+            favourite_serializer = FavouriteSerializer(data = data)
+            if favourite_serializer.is_valid():
+                favourite_serializer.save()
+            print(favourite_serializer.data)
+            del data['news']
+            data.update(getNewsById(id))
+            return data
+        else:
+            is_favourite.update(getNewsById(id))
+            return is_favourite
+    except:
+        return None
+
+def getFavouriteNewsBySearch(user:str, id:int) -> Dict:
+    try:
+        favourite = Favourite.objects.get(user=user, news=id)
+        favourite_serializer = FavouriteSerializer(favourite, many=False)
+        favourite_check = True if favourite_serializer.data['favourite'] == False else False
+        favourite_check = False if favourite_serializer.data['favourite'] == True else True
+        serializer = FavouriteSerializer(instance=favourite, data={'user':user, 'news':id, 'favourite':favourite_check})
+        if serializer.is_valid():
+            serializer.save()
+        return serializer.data
+    except:
+        return None
+
+def getNewsById(id:int) -> Dict:
+    try:
+        news = News.objects.get(id=id)
+        news_serializer = NewsSerializer(news, many=False)
+        return news_serializer.data
+    except:
+        return None
+
+def getFavouriteNews(user:str) -> List[Dict]:
+    news = Favourite.objects.filter(user=user, favourite=True)
+    data_list = []
+
+    for data in news.all():
+        temp = {
+                'user' : data.user,
+                'favourite' : data.favourite,
+            }
+        temp.update(getNewsById(data.news_id))
+        data_list.append(
+            temp
+        )
+    return data_list
