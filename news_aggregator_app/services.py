@@ -83,10 +83,13 @@ def createFavouriteNews(user:str, id:int) -> List[Dict]:
     try:
         is_favourite = getFavouriteNewsBySearch(user=user, id=id)
         if is_favourite is None:
-            favourite_serializer = FavouriteSerializer(data = {'user':user, 'news':id, 'favourite':True})
+            data = {'user':user, 'news':id, 'favourite':True}
+            favourite_serializer = FavouriteSerializer(data = data)
             if favourite_serializer.is_valid():
                 favourite_serializer.save()
-            return favourite_serializer.data
+            del data['news']
+            data.update(getNewsById(id))
+            return data
         else:
             return is_favourite
     except:
@@ -101,6 +104,14 @@ def getFavouriteNewsBySearch(user:str, id:int) -> Dict:
         serializer = FavouriteSerializer(instance=favourite, data={'user':user, 'news':id, 'favourite':favourite_check})
         if serializer.is_valid():
             serializer.save()
-        return serializer.data
+        return serializer.data.update(getNewsById(id))
+    except:
+        return None
+
+def getNewsById(id:int) -> Dict:
+    try:
+        news = News.objects.get(id=id)
+        news_serializer = NewsSerializer(news, many=False)
+        return news_serializer.data
     except:
         return None
