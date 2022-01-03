@@ -12,6 +12,25 @@ from .services import (listNews,
     getFavouriteNews
 )
 
+from drf_yasg2.utils import swagger_auto_schema
+from drf_yasg2 import openapi
+
+@swagger_auto_schema(method='get', manual_parameters=[openapi.Parameter(
+    'query', openapi.IN_QUERY, description="Use to search the news", type=openapi.TYPE_STRING
+    )], 
+    responses = {
+    "200": openapi.Response(
+        description="Returned the data from Our DB or Third Party Platforms",
+        examples={
+            "application/json": [{
+            "headline": "Tom Holland clarifies his \"If I'm playing Spider-Man at 30, I've done something wrong\" comment",
+            "link": "https://v.redd.it/boz1ib8ji6481",
+            "source": "reddit",
+            "query": 14
+        }]
+        }
+    )
+})
 @api_view(['GET'])
 def listAndSearchNews(request:Dict) -> List[Dict]:
     query = request.query_params.get('query', None)
