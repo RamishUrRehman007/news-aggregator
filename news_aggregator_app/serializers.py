@@ -1,7 +1,8 @@
 from rest_framework import serializers
 
 from .models import ( News,
-    NewsQuery
+    NewsQuery,
+    Favourite
     )
 
 class NewsQuerySerializer(serializers.ModelSerializer):
@@ -17,3 +18,8 @@ class GetNewsSerializer(serializers.ModelSerializer):
     class Meta:
         model = News
         fields = ('headline', 'source')
+
+class FavouriteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Favourite
+        fields = ('__all__')
