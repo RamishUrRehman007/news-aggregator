@@ -9,11 +9,13 @@ from .third_party_integrations import (reddit,
     )
 
 from .serializers import (NewsSerializer,
-    NewsQuerySerializer
+    NewsQuerySerializer,
+    FavouriteSerializer
     )
 
 from .models import (NewsQuery,
-    News
+    News,
+    Favourite
     )
 
 import datetime
@@ -79,8 +81,9 @@ def checkTime(date):
 
 def createFavouriteNews(user:str, id:int) -> List[Dict]:
     try:
-        news = News.objects.get(id=id)
-        serializer = NewsSerializer(news, many=False)
-        return serializer.data
+        favourite_serializer = FavouriteSerializer(data = {'user':user, 'news':id, 'favourite':True})
+        if favourite_serializer.is_valid():
+            favourite_serializer.save()
+        return favourite_serializer.data
     except:
         return None
