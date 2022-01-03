@@ -119,3 +119,18 @@ def getNewsById(id:int) -> Dict:
         return news_serializer.data
     except:
         return None
+
+def getFavouriteNews(user:str) -> List[Dict]:
+    news = Favourite.objects.filter(user=user, favourite=True)
+    data_list = []
+
+    for data in news.all():
+        temp = {
+                'user' : data.user,
+                'favourite' : data.favourite,
+            }
+        temp.update(getNewsById(data.news_id))
+        data_list.append(
+            temp
+        )
+    return data_list

@@ -9,6 +9,7 @@ from rest_framework.decorators import api_view
 from .services import (listNews,
     searchNews,
     createFavouriteNews,
+    getFavouriteNews
 )
 
 @api_view(['GET'])
@@ -30,11 +31,11 @@ def favouriteNews(request:Dict) -> List[Dict]:
         response_data = createFavouriteNews(query_user, query_id)
         if response_data is None:
             return Response({'Message': 'Not Found'}, 404)
-    # elif query_user is not None:
-    #     response_data = getFavouriteNews(query_user)
-    #     if response_data is None:
-    #         return Response({'Message': 'Not Found'}, 404)
+    elif query_user is not None:
+        response_data = getFavouriteNews(query_user)
+        if response_data is None:
+            return Response({'Message': 'Not Found'}, 404)
     else:
-        response_data = ''
+        response_data = Response({'Message': 'Please provide the query parameters'}, 400)
 
     return Response(response_data)
