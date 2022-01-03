@@ -32,10 +32,8 @@ def reddit(query:str = None) -> List[Dict]:
     reddit_headers['Authorization'] = f'bearer {TOKEN}'
 
     # if search box is not empty, search the term in the search box else search the whole channel
-    search = False
-    reddit_data = ''
 
-    if search == True:
+    if query:
         url1=f'https://oauth.reddit.com/r/news/search/?q={query}'
         reddit_data = reddit_api(url1, reddit_headers, params)
         return reddit_data

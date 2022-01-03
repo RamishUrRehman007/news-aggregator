@@ -6,15 +6,16 @@ from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 
-from .services import listNews
+from .services import (listNews,
+    searchNews
+)
 
 @api_view(['GET'])
 def listAndSearchNews(request:Dict) -> List[Dict]:
     query = request.query_params.get('query', None)
     if query is not None:
-        # queryset = queryset.filter(category=category)
-        listNews(query)
+        response_data = searchNews(query)
     else:
-        listNews()
+        response_data = listNews()
 
-    return Response(listNews())
+    return Response(response_data)
