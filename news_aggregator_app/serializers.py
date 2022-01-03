@@ -11,4 +11,9 @@ class NewsQuerySerializer(serializers.ModelSerializer):
 class NewsSerializer(serializers.ModelSerializer):
     class Meta:
         model = News
-        fields = '__all__'
+        fields = ('__all__')
+
+class GetNewsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = News
+        fields = ('headline', 'source')
