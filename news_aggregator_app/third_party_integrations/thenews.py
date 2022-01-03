@@ -18,7 +18,7 @@ def thenews(query) -> List[Dict]:
     thenews_headers = {'X-Api-Key': 'e539bb02a8e04179a9bd3c45fac0ef8c'}
     thenews_url = "https://newsapi.org/v2/everything?q="
     thenews_data = thenews_api(thenews_url, thenews_headers, query)
-    print(thenews_data)
+    return thenews_data
     
 
 
