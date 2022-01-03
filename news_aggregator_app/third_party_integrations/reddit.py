@@ -1,9 +1,10 @@
+from typing import Dict, List
 import requests
 import json
 from requests.auth import HTTPBasicAuth
 
 
-def reddit_api(url,headers,params,query=None):
+def reddit_api(url:str, headers:Dict, params:Dict, query:str = None) -> List[Dict]:
     res = requests.get(url=url, headers=headers, params=params)
     reddit_data = []
     for items in res.json()['data']['children']:
@@ -11,14 +12,14 @@ def reddit_api(url,headers,params,query=None):
     return reddit_data
 
 
-def reddit_token(id,key,username,password,headers):
+def reddit_token(id:str ,key:str, username:str, password:str, headers:Dict) -> Dict:
     url = 'https://www.reddit.com/api/v1/access_token'
     auth = requests.auth.HTTPBasicAuth(id, key)
     data = {'grant_type': 'password', 'username': username, 'password': password}
     response = requests.post(url=url, auth=auth, data=data, headers=headers)
     return response.json()
 
-def main_call(query=None):
+def reddit(query:str = None) -> List[Dict]:
     # REDDIT
     ID='tLNMiWMoCRhhsvuhtm17FA'
     key='LBBRiuCMHW5Ie81kkn1hXi4KqnNXrQ'
@@ -36,12 +37,12 @@ def main_call(query=None):
 
     if search == True:
         url1=f'https://oauth.reddit.com/r/news/search/?q={query}'
-        reddit_data = reddit_api(url1,reddit_headers,params)
-        print(reddit_data)
+        reddit_data = reddit_api(url1, reddit_headers, params)
+        return reddit_data
     else:
         url2='https://oauth.reddit.com/r/news'
         reddit_data = reddit_api(url2, reddit_headers, params)
-        print(reddit_data)
+        return reddit_data
     
 
 
