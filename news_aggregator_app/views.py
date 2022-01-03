@@ -19,3 +19,16 @@ def listAndSearchNews(request:Dict) -> List[Dict]:
         response_data = listNews()
 
     return Response(response_data)
+
+@api_view(['GET', 'POST'])
+def favouriteNews(request:Dict) -> List[Dict]:
+    query_user = request.query_params.get('user', None)
+    query_id = request.query_params.get('id', None)
+
+    if (query_user and query_id) is not None:
+        # response_data = searchNews(query_user)
+        Response([query_user, query_id])
+    else:
+        response_data = ''
+
+    return Response(response_data)
