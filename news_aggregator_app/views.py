@@ -61,6 +61,30 @@ def listAndSearchNews(request:Dict) -> List[Dict]:
         }
     )
 })
+@swagger_auto_schema(method='post', manual_parameters=[openapi.Parameter(
+    'user', openapi.IN_QUERY, description="Name of the user", type=openapi.TYPE_STRING
+    ),
+    openapi.Parameter(
+    'id', openapi.IN_QUERY, description="Id of the news, that is stored in our DB, can get from /news?query endpoint", type=openapi.TYPE_STRING
+    )], 
+    responses = {
+    "200": openapi.Response(
+        description="Returned the favourite news data from Our DB",
+        examples={
+            "application/json": [{
+            "id": 54,
+            "user": "hero3",
+            "favourite": False,
+            "news": 54,
+            "link": "https://i.redd.it/vlaobsmv94b61.jpg",
+            "headline": "Sabi Mo Angelaa",
+            "source": "reddit",
+            "created_at": "2022-01-03T18:54:49.228844Z",
+            "query": 13
+            }]
+        }
+    )
+})
 @api_view(['GET', 'POST'])
 def favouriteNews(request:Dict) -> List[Dict]:
     query_user = request.query_params.get('user', None)
