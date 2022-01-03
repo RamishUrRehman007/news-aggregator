@@ -82,15 +82,19 @@ def checkTime(date):
 def createFavouriteNews(user:str, id:int) -> List[Dict]:
     try:
         is_favourite = getFavouriteNewsBySearch(user=user, id=id)
+        print(is_favourite)
         if is_favourite is None:
             data = {'user':user, 'news':id, 'favourite':True}
+            print(data)
             favourite_serializer = FavouriteSerializer(data = data)
             if favourite_serializer.is_valid():
                 favourite_serializer.save()
+            print(favourite_serializer.data)
             del data['news']
             data.update(getNewsById(id))
             return data
         else:
+            is_favourite.update(getNewsById(id))
             return is_favourite
     except:
         return None
@@ -104,7 +108,7 @@ def getFavouriteNewsBySearch(user:str, id:int) -> Dict:
         serializer = FavouriteSerializer(instance=favourite, data={'user':user, 'news':id, 'favourite':favourite_check})
         if serializer.is_valid():
             serializer.save()
-        return serializer.data.update(getNewsById(id))
+        return serializer.data
     except:
         return None
 
